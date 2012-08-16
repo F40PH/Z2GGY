@@ -2,7 +2,7 @@ import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.Event;
 import org.pircbotx.hooks.Listener;
 import org.pircbotx.hooks.ListenerAdapter;
-import org.pircbotx.hooks.events.MessageEvent;
+import org.pircbotx.hooks.events.*;
 import org.pircbotx.hooks.managers.ListenerManager;
 import java.util.*;
 
@@ -18,11 +18,12 @@ public class MyBot extends ListenerAdapter implements Listener   {
 		dj.put( "herp", "HypotheticalSoundSystem" );
 		kudos.put( "derp", new ArrayList<String>() );
 		kudos.put( "herp", new ArrayList<String>() );
-    }             
+    } 
+
+
 	
     public void onMessage(MessageEvent event) throws Exception
 	{
-        
         if( event.getMessage().equalsIgnoreCase("!kudos derp") || event.getMessage().equalsIgnoreCase("!kudos herp") )
         {
 		  String target = event.getMessage().toLowerCase().split(" ")[1];
@@ -30,21 +31,16 @@ public class MyBot extends ListenerAdapter implements Listener   {
 		  
 		  if( kudos.get( target ).contains( userhost ) ) 
 		  {
-		   sendNotice( event.getUser(), "You have already given kudos to " + dj.get( target ) + " during this session.");
+		   event.getBot().sendNotice( event.getUser().getNick(), "You have already given kudos to " + dj.get( target ) + " during this session.");
 		  }
 		  
 		  else 
 		  
 		  {
            kudos.get( target ).add( userhost );
-           sendMessage("#AwesomeCougars", event.getUser() + " has given kudos to " + dj.get( target ) + ". (" + kudos.get( target ).size() + " kudos)");
+           event.getBot().sendMessage("#AwesomeCougars", event.getUser().getNick() + " has given kudos to " + dj.get( target ) + ". (" + kudos.get( target ).size() + " kudos)");
 		  }
         }
-		
-		else if( event.getMessage().toLowerCase().startsWith("go away Z2GGY") &&  event.getUser().isIrcop() )
-		{
-			quitServer("Goodbye, " + event.getUser().getNick() + "!");
-		}
         
     }  
 
